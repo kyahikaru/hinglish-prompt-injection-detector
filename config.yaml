@@ -1,0 +1,14 @@
+normalization:
+  enabled: true
+  max_repeated_characters: 2
+
+rules:
+  enabled: true
+  override_threshold: 1
+
+classifier:
+  model_type: logistic_regression
+  probability_threshold: 0.7
+
+decision:
+  strategy: conservative
