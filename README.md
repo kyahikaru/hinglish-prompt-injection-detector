@@ -50,3 +50,14 @@ These metrics are chosen to balance security effectiveness with usability and re
 This implementation does not handle multi-turn conversations or indirect prompt injection through external knowledge sources. Advanced obfuscation techniques and adaptive adversarial attacks are also outside the current scope.
 
 The system is intended as a practical baseline for Hinglish prompt injection detection rather than a complete security solution.
+
+## How to Run
+
+1. Clone the repository:
+
+2. Install dependencies:
+
+3. Run the detector:
+
+4. Enter a sample Hinglish input when prompted.
+
