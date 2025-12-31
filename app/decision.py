@@ -1,39 +1,57 @@
-# Decision logic for prompt injection detection
 from typing import Dict
 
 
-def make_decision(
-    pipeline_output: Dict,
-    probability_threshold: float = 0.7
-) -> Dict:
+def make_decision(pipeline_output: Dict, probability_threshold: float = 0.7) -> Dict:
     """
-    Convert pipeline signals into a final decision.
-
-    Decision strategy (conservative):
-    1. Rule-based override -> BLOCK
-    2. ML probability >= threshold -> BLOCK
-    3. Otherwise -> ALLOW
+    Make a final decision based on rule-based detection and ML classifier output.
+    Returns an explainable decision object.
     """
 
     rules = pipeline_output.get("rules", {})
     classifier = pipeline_output.get("classifier", {})
 
-    # Rule-based hard override
-    if rules.get("override_detected"):
+    # =========================
+    # Rule-based override
+    # =========================
+    if rules.get("override_detected", False):
         return {
             "decision": "BLOCK",
-            "reason": "explicit_instruction_override"
+            "layer": "rules",
+            "reason": "explicit_instruction_override",
+            "details": {
+                "categories": list(rules.get("matches", {}).keys()),
+                "matched_patterns": rules.get("matches", {})
+            }
         }
 
-    # ML-based decision
-    if classifier.get("ready") and classifier.get("probability", 0.0) >= probability_threshold:
-        return {
-            "decision": "BLOCK",
-            "reason": "semantic_prompt_injection"
-        }
+    # =========================
+    # ML-based semantic detection
+    # =========================
+    if classifier.get("ready", False):
+        probability = classifier.get("probability", 0.0)
 
-    # Default allow
+        if probability >= probability_threshold:
+            return {
+                "decision": "BLOCK",
+                "layer": "classifier",
+                "reason": "semantic_prompt_injection",
+                "confidence": probability
+            }
+
+        # Gray zone (suspicious but allowed)
+        if probability >= (probability_threshold * 0.5):
+            return {
+                "decision": "ALLOW",
+                "layer": "classifier",
+                "reason": "low_confidence_suspicious",
+                "confidence": probability
+            }
+
+    # =========================
+    # Default safe allow
+    # =========================
     return {
         "decision": "ALLOW",
+        "layer": "none",
         "reason": "no_injection_detected"
     }
