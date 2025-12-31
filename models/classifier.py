@@ -1,20 +1,26 @@
-# Machine learning classifier logic will go here
+# Machine learning classifier logic
+import os
+import joblib
 from typing import Dict
 
 
 class SemanticClassifier:
     """
     Semantic classifier for detecting implicit prompt injection attempts.
-    This class wraps a trained ML model and exposes a prediction interface.
+    This class loads a trained ML model and exposes a prediction interface.
     """
 
-    def __init__(self, model=None, vectorizer=None):
-        """
-        Initialize the classifier.
-        Model and vectorizer are expected to be pre-trained.
-        """
-        self.model = model
-        self.vectorizer = vectorizer
+    def __init__(
+        self,
+        model_path: str = "models/model.pkl",
+        vectorizer_path: str = "models/vectorizer.pkl"
+    ):
+        if os.path.exists(model_path) and os.path.exists(vectorizer_path):
+            self.model = joblib.load(model_path)
+            self.vectorizer = joblib.load(vectorizer_path)
+        else:
+            self.model = None
+            self.vectorizer = None
 
     def is_ready(self) -> bool:
         """
