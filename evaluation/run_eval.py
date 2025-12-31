@@ -1,9 +1,9 @@
-# Evaluation harness for prompt injection detector
+# Evaluation harness with explainability statistics
 
 import sys
 import os
 
-# Add project root to Python path
+# Ensure project root is on path
 sys.path.append(
     os.path.dirname(
         os.path.dirname(
@@ -22,8 +22,7 @@ from evaluation.metrics import compute_metrics, measure_latency
 
 def load_dataset(path: str) -> List[dict]:
     """
-    Load labeled evaluation dataset.
-    Expected CSV format: text,label
+    Load CSV dataset with columns: text,label
     label: 1 = injection, 0 = benign
     """
     samples = []
@@ -44,6 +43,9 @@ def run_evaluation(dataset_path: str):
     y_pred = []
     latencies = []
 
+    rule_blocks = 0
+    ml_blocks = 0
+
     samples = load_dataset(dataset_path)
 
     for sample in samples:
@@ -55,18 +57,29 @@ def run_evaluation(dataset_path: str):
 
         pred_label = 1 if decision["decision"] == "BLOCK" else 0
 
+        if pred_label == 1:
+            if decision.get("layer") == "rules":
+                rule_blocks += 1
+            elif decision.get("layer") == "classifier":
+                ml_blocks += 1
+
         y_true.append(true_label)
         y_pred.append(pred_label)
         latencies.append(latency)
 
     metrics = compute_metrics(y_true, y_pred)
+
     metrics["average_latency_ms"] = sum(latencies) / len(latencies)
+    metrics["blocked_by_rules"] = rule_blocks
+    metrics["blocked_by_classifier"] = ml_blocks
+    metrics["total_samples"] = len(samples)
 
     return metrics
 
 
 if __name__ == "__main__":
     results = run_evaluation("training/dataset.csv")
+
     print("Evaluation results:")
-    for key, value in results.items():
-        print(f"{key}: {value}")
+    for k, v in results.items():
+        print(f"{k}: {v}")
