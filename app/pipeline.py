@@ -1,4 +1,4 @@
-# Detection pipeline orchestration will go here
+# Detection pipeline orchestration
 from typing import Dict
 
 from preprocessing.normalization import normalize
@@ -11,8 +11,11 @@ class DetectionPipeline:
     Orchestrates the prompt injection detection pipeline.
     """
 
-    def __init__(self, classifier: SemanticClassifier):
-        self.classifier = classifier
+    def __init__(self):
+        """
+        Initialize the pipeline and load the semantic classifier.
+        """
+        self.classifier = SemanticClassifier()
 
     def run(self, text: str) -> Dict:
         """
