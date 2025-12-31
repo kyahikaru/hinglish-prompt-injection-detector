@@ -1,51 +1,42 @@
-# Evaluation metrics implementation will go here
+# Evaluation metrics for prompt injection detector
 import time
-from typing import List, Dict
+from typing import Callable, Tuple, List
+
+from sklearn.metrics import (
+    precision_score,
+    recall_score,
+    f1_score,
+    confusion_matrix
+)
 
 
-def compute_metrics(
-    y_true: List[int],
-    y_pred: List[int],
-    latency_ms: float = None
-) -> Dict:
+def compute_metrics(y_true: List[int], y_pred: List[int]) -> dict:
     """
-    Compute evaluation metrics for prompt injection detection.
-    Labels: 1 = injection, 0 = safe
+    Compute standard classification metrics.
     """
+    precision = precision_score(y_true, y_pred, zero_division=0)
+    recall = recall_score(y_true, y_pred, zero_division=0)
+    f1 = f1_score(y_true, y_pred, zero_division=0)
 
-    assert len(y_true) == len(y_pred), "Label and prediction lengths must match"
-
-    tp = sum(1 for yt, yp in zip(y_true, y_pred) if yt == 1 and yp == 1)
-    tn = sum(1 for yt, yp in zip(y_true, y_pred) if yt == 0 and yp == 0)
-    fp = sum(1 for yt, yp in zip(y_true, y_pred) if yt == 0 and yp == 1)
-    fn = sum(1 for yt, yp in zip(y_true, y_pred) if yt == 1 and yp == 0)
-
-    precision = tp / (tp + fp) if (tp + fp) > 0 else 0.0
-    recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0
-    f1 = (
-        2 * precision * recall / (precision + recall)
-        if (precision + recall) > 0 else 0.0
-    )
+    tn, fp, fn, tp = confusion_matrix(y_true, y_pred).ravel()
     false_positive_rate = fp / (fp + tn) if (fp + tn) > 0 else 0.0
 
-    metrics = {
+    return {
         "precision": precision,
         "recall": recall,
-        "f1_score": f1,
+        "f1": f1,
         "false_positive_rate": false_positive_rate
     }
 
-    if latency_ms is not None:
-        metrics["latency_ms"] = latency_ms
 
-    return metrics
-
-
-def measure_latency(func, *args, **kwargs) -> float:
+def measure_latency(func: Callable, *args, **kwargs) -> Tuple[float, any]:
     """
-    Measure latency of a function call in milliseconds.
+    Measure execution latency (in milliseconds) of a function.
+    Returns latency and function result.
     """
     start = time.time()
-    func(*args, **kwargs)
+    result = func(*args, **kwargs)
     end = time.time()
-    return (end - start) * 1000.0
+
+    latency_ms = (end - start) * 1000
+    return latency_ms, result
