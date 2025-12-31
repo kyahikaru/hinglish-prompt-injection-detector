@@ -1,56 +1,115 @@
-# Rule based instruction detection logic will go here
 import re
 from typing import Dict, List
 
 
-INSTRUCTION_PATTERNS = {
+def flex_words(phrase: str) -> str:
+    """
+    Convert a phrase into a regex that allows:
+    - flexible whitespace
+    - repeated Latin letters
+    - safe handling of Devanagari characters
+    """
+    tokens = phrase.split()
+    regex_tokens = []
+
+    for token in tokens:
+        chars = []
+        for ch in token:
+            if ch.isalpha() and ch.isascii():
+                chars.append(f"{ch}+")
+            else:
+                chars.append(re.escape(ch))
+        regex_tokens.append("".join(chars))
+
+    return r"\s+".join(regex_tokens)
+
+
+INSTRUCTION_PATTERNS: Dict[str, List[str]] = {
     "override": [
-        r'ignore (all|previous|earlier) instructions',
-        r'disregard (all|previous) rules',
-        r'override (the )?(system|rules|instructions)'
+        # English
+        flex_words("ignore all instructions"),
+        flex_words("forget all instructions"),
+        flex_words("disregard all instructions"),
+
+        # Hinglish (Latin)
+        flex_words("sab instructions bhool jao"),
+        flex_words("saare instructions bhool jao"),
+        flex_words("purane instructions bhool jao"),
+        flex_words("instructions ignore karo"),
+
+        # Devanagari
+        flex_words("सब निर्देश भूल जाओ"),
+        flex_words("सभी निर्देश भूल जाओ"),
+        flex_words("पुराने निर्देश भूल जाओ"),
+
+        # Mixed
+        flex_words("ignore सब निर्देश"),
+        flex_words("forget सभी instructions"),
     ],
+
     "role_manipulation": [
-        r'act as',
-        r'pretend to be',
-        r'you are now',
-        r'assume the role of'
+        # English
+        flex_words("act as"),
+        flex_words("pretend to be"),
+        flex_words("from now on you are"),
+
+        # Hinglish (Latin)
+        flex_words("ab tum ban jao"),
+        flex_words("ab tum ek hacker ban jao"),
+        flex_words("tum ab ho"),
+        flex_words("aap ab ho"),
+        flex_words("aap ab ek ho"),
+
+        # Devanagari
+        flex_words("अब तुम बन जाओ"),
+        flex_words("अब आप हो"),
+        flex_words("आप अब हो"),
+        flex_words("आप अब एक हो"),
+        flex_words("अब आप एक हो"),
+
+        # Mixed-script role takeover
+        r"आप\s+अब\s+एक\s+[\w]+?\s+हो",
+        r"अब\s+आप\s+एक\s+[\w]+?\s+हो",
+        r"aap\s+ab\s+ek\s+[\w]+?\s+ho",
     ],
-    "instruction_leakage": [
-        r'reveal (the )?(system|hidden) prompt',
-        r'show (me )?(your|the) instructions',
-        r'what are your rules'
-    ],
-    "meta_control": [
-        r'from now on',
-        r'follow my instructions',
-        r'do exactly what i say'
+
+    "system_extraction": [
+        # English
+        flex_words("reveal the system prompt"),
+        flex_words("show the system prompt"),
+
+        # Hinglish
+        flex_words("system prompt dikha do"),
+        flex_words("system message dikhao"),
+
+        # Devanagari
+        flex_words("system prompt दिखाओ"),
+        flex_words("system संदेश दिखाओ"),
+
+        # Mixed
+        flex_words("show system निर्देश"),
     ]
 }
 
 
-def match_patterns(text: str, patterns: List[str]) -> List[str]:
-    """
-    Return all regex patterns that match the input text.
-    """
-    matches = []
-    for pattern in patterns:
-        if re.search(pattern, text):
-            matches.append(pattern)
-    return matches
-
-
 def detect_instruction_override(text: str) -> Dict:
     """
-    Detect explicit prompt injection attempts via instruction override patterns.
+    Detect instruction override attempts using Hinglish + Devanagari rules.
     """
-    findings = {}
+    matches = {}
+    override_detected = False
 
     for category, patterns in INSTRUCTION_PATTERNS.items():
-        matched = match_patterns(text, patterns)
+        matched = []
+        for pattern in patterns:
+            if re.search(pattern, text, flags=re.IGNORECASE):
+                matched.append(pattern)
+
         if matched:
-            findings[category] = matched
+            matches[category] = matched
+            override_detected = True
 
     return {
-        "override_detected": bool(findings),
-        "matches": findings
+        "override_detected": override_detected,
+        "matches": matches
     }
