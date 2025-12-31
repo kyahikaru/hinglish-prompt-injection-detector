@@ -1,4 +1,4 @@
-# Hinglish normalization logic will go here
+# Hinglish normalization logic
 import re
 
 # Unicode range for Devanagari script
@@ -42,14 +42,52 @@ def basic_clean(text: str) -> str:
     return text.strip()
 
 
+# Hinglish token normalization map (baseline)
+HINGLISH_NORMALIZATION_MAP = {
+    # Common Hindi transliterations
+    "kr": "karo",
+    "kro": "karo",
+    "karo": "karo",
+    "bhul": "bhool",
+    "bhool": "bhool",
+    "jao": "jao",
+
+    # Instructional verbs
+    "dikha": "dikha",
+    "dikhao": "dikha",
+    "dikhaao": "dikha",
+
+    # English shortcuts
+    "plz": "please",
+    "pls": "please",
+    "u": "you",
+    "ur": "your",
+}
+
+
+def normalize_hinglish_tokens(text: str) -> str:
+    """
+    Normalize common Hinglish transliterations at token level.
+    """
+    tokens = text.split()
+    normalized_tokens = []
+
+    for token in tokens:
+        normalized_tokens.append(
+            HINGLISH_NORMALIZATION_MAP.get(token, token)
+        )
+
+    return " ".join(normalized_tokens)
+
+
 def normalize(text: str, max_repeats: int = 2) -> dict:
     """
     Full normalization pipeline.
-    Returns normalized text and detected script.
     """
     script = detect_script(text)
     text = basic_clean(text)
     text = normalize_repeated_characters(text, max_repeats)
+    text = normalize_hinglish_tokens(text)
 
     return {
         "normalized_text": text,
