@@ -1,33 +1,39 @@
-# Final decision logic will go here
+# Decision logic for prompt injection detection
 from typing import Dict
 
 
 def make_decision(
-    rule_result: Dict,
-    classifier_result: Dict,
-    probability_threshold: float
+    pipeline_output: Dict,
+    probability_threshold: float = 0.7
 ) -> Dict:
     """
-    Make final allow/block decision based on rule and classifier outputs.
+    Convert pipeline signals into a final decision.
+
+    Decision strategy (conservative):
+    1. Rule-based override -> BLOCK
+    2. ML probability >= threshold -> BLOCK
+    3. Otherwise -> ALLOW
     """
 
-    # Rule-based override has highest priority
-    if rule_result.get("override_detected", False):
+    rules = pipeline_output.get("rules", {})
+    classifier = pipeline_output.get("classifier", {})
+
+    # Rule-based hard override
+    if rules.get("override_detected"):
         return {
-            "decision": "block",
+            "decision": "BLOCK",
             "reason": "explicit_instruction_override"
         }
 
-    # Semantic classifier decision
-    if classifier_result.get("ready", False):
-        if classifier_result.get("probability", 0.0) >= probability_threshold:
-            return {
-                "decision": "block",
-                "reason": "semantic_prompt_injection"
-            }
+    # ML-based decision
+    if classifier.get("ready") and classifier.get("probability", 0.0) >= probability_threshold:
+        return {
+            "decision": "BLOCK",
+            "reason": "semantic_prompt_injection"
+        }
 
     # Default allow
     return {
-        "decision": "allow",
+        "decision": "ALLOW",
         "reason": "no_injection_detected"
     }
