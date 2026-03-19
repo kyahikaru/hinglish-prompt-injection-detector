@@ -128,17 +128,6 @@ Reason : explicit_instruction_override
 
 
 
-hinglish-prompt-injection-detector/
-├── app/
-├── evaluation/
-├── models/
-├── preprocessing/
-├── rules/
-├── scripts/
-├── training/
-├── config.yaml
-├── requirements.txt
-
 
 ## Setup Instructions
 
