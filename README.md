@@ -97,7 +97,7 @@ This is achieved through a combination of:
 
 
 
-============================================================
+
 🔍 PROMPT INJECTION DETECTION RESULT
 ====================================
 
