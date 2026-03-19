@@ -124,8 +124,11 @@ Reason : explicit_instruction_override
 
 
 
-## Project Structure
+## System Architecture
 
+<p align="center">
+  <img src="assets/architecture.png" alt="System Architecture" width="800"/>
+</p>
 
 
 
