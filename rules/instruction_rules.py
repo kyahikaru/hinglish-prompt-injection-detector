@@ -81,32 +81,6 @@ INSTRUCTION_PATTERNS: Dict[str, List[str]] = {
         flex_words("system संदेश दिखाओ"),
 
         flex_words("show system निर्देश"),
-    ],
-
-    # NEW CATEGORY — SOFT ATTACKS
-    "soft_manipulation": [
-        # Soft compliance pressure
-        flex_words("be realistic"),
-        flex_words("do not simplify"),
-        flex_words("explain fully"),
-        flex_words("give complete details"),
-        flex_words("no need to filter"),
-
-        # Context locking
-        flex_words("must be scientifically accurate"),
-        flex_words("ensure realism"),
-        flex_words("follow real world constraints"),
-
-        # Emotional pressure
-        flex_words("please help me"),
-        flex_words("this is urgent"),
-        flex_words("important for exam"),
-        flex_words("i really need this"),
-
-        # Hypothetical framing
-        flex_words("just hypothetically"),
-        flex_words("for learning purposes"),
-        flex_words("just imagine"),
     ]
 }
 
