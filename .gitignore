@@ -212,3 +212,4 @@ __marimo__/
 # Python junk
 __pycache__/
 *.pyc
+models/classifier.onnx
