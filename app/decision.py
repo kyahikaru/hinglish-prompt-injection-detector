@@ -1,11 +1,21 @@
 from typing import Dict
+import yaml
 
 
-def make_decision(pipeline_output: Dict, probability_threshold: float = 0.7) -> Dict:
+def _load_probability_threshold(path: str = "config.yaml") -> float:
+    with open(path, "r", encoding="utf-8") as f:
+        config = yaml.safe_load(f)
+    return float(config["classifier"]["probability_threshold"])
+
+
+def make_decision(pipeline_output: Dict, probability_threshold: float | None = None) -> Dict:
     """
     Make a final decision based on rule-based detection and ML classifier output.
     Returns an explainable decision object.
     """
+
+    if probability_threshold is None:
+        probability_threshold = _load_probability_threshold()
 
     rules = pipeline_output.get("rules", {})
     classifier = pipeline_output.get("classifier", {})

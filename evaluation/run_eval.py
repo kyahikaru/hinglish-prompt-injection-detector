@@ -14,10 +14,16 @@ sys.path.append(
 
 import csv
 from typing import List
+import yaml
 
 from app.pipeline import DetectionPipeline
 from app.decision import make_decision
 from evaluation.metrics import compute_metrics, measure_latency
+
+
+def load_config(path: str = "config.yaml") -> dict:
+    with open(path, "r", encoding="utf-8") as f:
+        return yaml.safe_load(f)
 
 
 def load_dataset(path: str) -> List[dict]:
@@ -78,7 +84,8 @@ def run_evaluation(dataset_path: str):
 
 
 if __name__ == "__main__":
-    results = run_evaluation("training/dataset.csv")
+    config = load_config()
+    results = run_evaluation(config["data"]["dataset_path"])
 
     print("Evaluation results:")
     for k, v in results.items():

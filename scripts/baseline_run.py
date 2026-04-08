@@ -11,6 +11,7 @@ import pandas as pd
 import numpy as np
 import time
 import re
+import yaml
 import onnxruntime as rt
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics import confusion_matrix, precision_score, recall_score, f1_score, accuracy_score
@@ -20,20 +21,23 @@ from rules.instruction_rules import detect_instruction_override
 # =========================
 # CONFIG
 # =========================
-DATA_PATH = "training/dataset.csv"
-MODEL_PATH = "models/classifier.onnx"
+with open("config.yaml", "r", encoding="utf-8") as f:
+    CONFIG = yaml.safe_load(f)
+
+DATA_PATH = CONFIG["data"]["dataset_path"]
+MODEL_PATH = CONFIG["classifier"]["model_path"]
+EMBEDDER_NAME = CONFIG["embeddings"]["model_name"]
+THRESHOLD = CONFIG["classifier"]["probability_threshold"]
+TEST_SIZE = CONFIG["data"]["test_size"]
+RANDOM_STATE = CONFIG["data"]["random_state"]
 TEXT_COL = "text"
 LABEL_COL = "label"
-
-# Calibrated for current synthetic dataset noise
-THRESHOLD = 0.8 
-RANDOM_STATE = 42
 
 # =========================
 # INITIALIZATION
 # =========================
 print("Initializing Production Pipeline...")
-embedder = SentenceTransformer('sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2')
+embedder = SentenceTransformer(EMBEDDER_NAME)
 sess = rt.InferenceSession(MODEL_PATH)
 input_name = sess.get_inputs()[0].name
 label_name = sess.get_outputs()[1].name # Probabilities output
@@ -60,7 +64,7 @@ df[TEXT_COL] = df[TEXT_COL].apply(normalize_text)
 # We use a 20% slice for final evaluation metrics
 _, X_test, _, y_test = train_test_split(
     df[TEXT_COL], df[LABEL_COL], 
-    test_size=0.2, stratify=df[LABEL_COL], random_state=RANDOM_STATE
+    test_size=TEST_SIZE, stratify=df[LABEL_COL], random_state=RANDOM_STATE
 )
 
 # =========================
