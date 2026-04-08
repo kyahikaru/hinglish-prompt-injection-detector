@@ -1,4 +1,9 @@
-pyyaml>=6.0
-pandas>=1.5
-scikit-learn>=1.2
+sentence-transformers
+skl2onnx
+onnxruntime
+scikit-learn
+pandas
+numpy
+pyyaml
+torch
 
