@@ -1,14 +1,37 @@
+# ============================================
+# Hinglish Prompt Injection Detector
+# Single source of truth for all parameters
+# ============================================
+
+# --- Data ---
+data:
+  dataset_path: "training/dataset.csv"
+  test_size: 0.20
+  random_state: 42
+
+# --- Embeddings ---
+embeddings:
+  model_name: "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+  # To swap model for hackathon, change model_name only
+
+# --- Classifier ---
+classifier:
+  model_path: "models/classifier.onnx"
+  probability_threshold: 0.80
+  # Raise threshold to reduce false positives
+  # Lower threshold to catch more injections at cost of FPR
+
+# --- Rule Engine ---
+rules:
+  enabled: true
+  # Rule engine runs before classifier as first-stage filter
+
+# --- Normalization ---
 normalization:
   enabled: true
   max_repeated_characters: 2
 
-rules:
-  enabled: true
-  override_threshold: 1
-
-classifier:
-  model_type: logistic_regression
-  probability_threshold: 0.7
-
+# --- Decision ---
 decision:
-  strategy: conservative
+  strategy: "hybrid"
+  # hybrid = rules first, then classifier
