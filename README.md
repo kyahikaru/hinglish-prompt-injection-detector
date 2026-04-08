@@ -20,7 +20,9 @@ The detector uses a two-stage hybrid strategy:
    - `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2` embeddings
    - Logistic Regression classifier
    - Exported and served as ONNX
- ![Architecture](assets/architecture.png)
+  
+     ![Architecture](assets/architecture.png)
+ 
 Decision behavior:
 
 - Strategy: `hybrid`
