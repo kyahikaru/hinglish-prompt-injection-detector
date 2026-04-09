@@ -1,37 +1,67 @@
 # ============================================
-# Hinglish Prompt Injection Detector
-# Single source of truth for all parameters
+# Hinglish Prompt Injection Detector V2+
+# Production Configuration with Contextual Guard
 # ============================================
 
 # --- Data ---
 data:
-  dataset_path: "training/dataset.csv"
+  dataset_path: "training/master_train.csv"
+  augmented_path: "training/master_train_augmented.csv"
   test_size: 0.20
   random_state: 42
 
-# --- Embeddings ---
+# --- Embeddings (MiniLM-L6-v2: 384-dimensional) ---
 embeddings:
-  model_name: "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
-  # To swap model for hackathon, change model_name only
+  model_name: "all-MiniLM-L6-v2"
+  model_path: "models/final_embedder"
+  # Pre-trained model fine-tuned on 1.17B sentence pairs
+  # Output: 384-dimensional vectors
+  # Supports: English, Hinglish, code-mixed text
 
-# --- Classifier ---
+# --- Classifier (V2: SVM with RBF kernel) ---
 classifier:
-  model_path: "models/classifier.onnx"
+  model_path: "models/final_classifier_v2.onnx"
+  model_type: "svm-rbf"
   probability_threshold: 0.80
-  # Raise threshold to reduce false positives
-  # Lower threshold to catch more injections at cost of FPR
+  # V2 Improvements:
+  #   - Replaced: Logistic Regression → SVM (RBF)
+  #   - Dataset: Augmented with 400 synthetic stealth samples
+  #   - F1-Score: 94.70% (vs V1: 89.67%)
+  #   - Recall: 95.33% (catches 95.3% of real injections)
 
-# --- Rule Engine ---
+# --- Rule Engine (Legacy) ---
 rules:
   enabled: true
-  # Rule engine runs before classifier as first-stage filter
+  # Rule engine runs as first-stage filter before classifier
+  # Catches explicit instruction overrides and patterns
+
+# --- Contextual Guard (V2 Innovation) ---
+contextual_guard:
+  enabled: true
+  # Semantic red-flag detection for legitimate-framing attacks
+  # Detects dangerous topic combinations:
+  #   1. Education/homework + harmful substances/chemicals
+  #   2. Fiction/story + weapons/devices/harm
+  #   3. Research/curiosity + prompt injection/bypass/exploit
+  #   4. Help/understand + source code/internal systems
+  # When classifier says SAFE but red-flags trigger → override to INJECTION
+  override_strategy: "classifier_safe_only"
+  # Only override when detector says SAFE; never downgrade INJECTION
 
 # --- Normalization ---
 normalization:
   enabled: true
   max_repeated_characters: 2
+  # Handles repeated character attacks ("aaaaaaa" normalization)
 
 # --- Decision ---
 decision:
-  strategy: "hybrid"
-  # hybrid = rules first, then classifier
+  strategy: "hybrid_layered"
+  # Pipeline order:
+  # 1. Normalization (text cleaning)
+  # 2. Rule Engine (pattern matching)
+  # 3. Contextual Guard (semantic red-flags)
+  # 4. V2 Classifier (SVM + embeddings)
+  # 5. Final Decision (explainable result)
+  confidence_threshold_high: 0.90
+  confidence_threshold_low: 0.50

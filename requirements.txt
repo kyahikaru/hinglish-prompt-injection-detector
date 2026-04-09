@@ -1,9 +1,28 @@
-sentence-transformers
-skl2onnx
-onnxruntime
-scikit-learn
-pandas
-numpy
-pyyaml
-torch
+# Hinglish Prompt Injection Detector V2+ Dependencies
+# Python version: 3.9+
+# Generated: April 9, 2026
+# For reproducibility in research, all versions are pinned.
+
+# Core ML/NLP
+torch==2.0.1
+transformers==4.34.0
+sentence-transformers==2.2.2
+scikit-learn==1.3.1
+
+# Model Export & Inference
+skl2onnx==1.14.0
+onnxruntime==1.16.1
+onnx==1.14.1
+
+# Data Processing
+pandas==2.0.3
+numpy==1.24.3
+
+# Configuration & Utils
+pyyaml==6.0
+regex==2023.10.3
+
+# Testing (Optional: dev environment only)
+pytest==7.4.0
+pytest-cov==4.1.0
 
