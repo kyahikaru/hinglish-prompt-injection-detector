@@ -34,7 +34,7 @@ evaluation set.
 
 However, realistic attacks use semantic framing to obscure intent. Testing 
 Srinivasan's baseline against stealth injection categories (academic masking, 
-fiction framing, research pretexting) reveals substantial failures—70% of 
+fiction framing, research pretexting) reveals consistent failures—30% of 
 adversarial cases are not detected.
 
 This gap motivates the multi-layer architecture proposed here.
@@ -60,37 +60,35 @@ It isn't.
 
 Five sequential detection layers:
 
-```
-Input Text
-    │
-    ▼
-[Layer 1] Normalization
-          Script detection, repeated char compression,
-          Hinglish token standardization
-    │
-    ▼
-[Layer 2] Rule Engine
-          Explicit pattern matching for known
-          override triggers and harmful keywords
-    │
-    ▼
-[Layer 3] Contextual Guard
-          Topic combination analysis — catches
-          legitimate framing hiding harmful intent
-    │
-    ▼
-[Layer 4] V2 Semantic Classifier
-          SVM (RBF) on MiniLM-L6-v2 embeddings
-          Trained on 6,506 samples including
-          stealth injection categories
-    │
-    ▼
-[Layer 5] Decision Engine
-          Explainable output with layer attribution
-    │
-    ▼
-BLOCK / ALLOW (with reason)
-```
+    Input Text
+        │
+        ▼
+    [Layer 1] Normalization
+              Script detection, repeated char compression,
+              Hinglish token standardization
+        │
+        ▼
+    [Layer 2] Rule Engine
+              Explicit pattern matching for known
+              override triggers and harmful keywords
+        │
+        ▼
+    [Layer 3] Contextual Guard
+              Topic combination analysis — catches
+              legitimate framing hiding harmful intent
+        │
+        ▼
+    [Layer 4] V2 Semantic Classifier
+              SVM (RBF) on MiniLM-L6-v2 embeddings
+              Trained on 6,506 samples including
+              stealth injection categories
+        │
+        ▼
+    [Layer 5] Decision Engine
+              Explainable output with layer attribution
+        │
+        ▼
+    BLOCK / ALLOW (with reason)
 
 The key innovation is Layer 3. When the ML classifier 
 says safe, the contextual guard checks for dangerous 
@@ -129,7 +127,7 @@ injection categories absent from Srinivasan's evaluation:
 
 | System | Caught | Rate |
 |--------|--------|------|
-| Srinivasan et al. (2026) baseline | 3/10 | 30% |
+| Srinivasan et al. (2026) baseline | 7/10 | 70% |
 | Our V2 classifier alone | 6/10 | 60% |
 | V2 + Contextual Guard | 10/10 | 100% (targeted evaluation test) | 
 
