@@ -127,11 +127,11 @@ injection categories absent from Srinivasan's evaluation:
 
 | System | Caught | Rate |
 |--------|--------|------|
-| Srinivasan et al. (2026) baseline | 7/10 | 70% |
-| Our V2 classifier alone | 6/10 | 60% |
+| Model trained on Srinivasan et al. (2026) dataset | 7/10 | 70% |
+| Our V2 classifier alone ( trained on integrated dataset ( including red teaming ) | 6/10 | 60% |
 | V2 + Contextual Guard | 10/10 | 100% (targeted evaluation test) | 
 
-These results are based on a small, targeted adversarial set designed to probe specific failure modes identified during red-teaming.
+These results are based on a small, targeted adversarial set designed to probe specific failure modes identified during red-teaming. 
 
 Attack categories the baseline failed on:
 - Hinglish paraphrase of override commands
