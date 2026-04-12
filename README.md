@@ -128,7 +128,7 @@ injection categories absent from Srinivasan's evaluation:
 | System | Caught | Rate |
 |--------|--------|------|
 | Model trained on Srinivasan et al. (2026) dataset (reproduction) | 7/10 | 70% |
-| Our V2 classifier alone trained on integrated dataset ( including red teaming ) | 7/10 | 70% |
+| Our V2 classifier alone trained on integrated dataset ( including red teaming ) | 6/10 | 60% |
 | V2 + Contextual Guard | 10/10 | 100% (targeted evaluation test) | 
 
 The first row represents a classifier trained on the Srinivasan et al. dataset (reproduction), not the original model. The lower performance of the V2 classifier reflects increased task difficulty due to adversarial and semantically ambiguous samples. The contextual guard improves performance by explicitly modeling risky intent through topic combinations (e.g. benign framing + harmful content), enabling detection beyond surface level patterns learned by the classifier. This work is a proof of concept for a layered defense approach, ongoing work focuses on expanding adversarial evaluation, incorporating multi-turn conversational context, and improving robustness to more sophisticated attack strategies.
