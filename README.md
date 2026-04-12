@@ -65,7 +65,8 @@ Five sequential detection layers:
         ▼
     [Layer 1] Normalization
               Script detection, repeated char compression,
-              Hinglish token standardization
+              Unicode Normalization (NKFC), dot removal,
+              leet-speak mapping, Hinglish token standardization
         │
         ▼
     [Layer 2] Rule Engine
