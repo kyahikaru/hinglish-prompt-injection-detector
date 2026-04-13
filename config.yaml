@@ -5,7 +5,7 @@
 
 # --- Data ---
 data:
-  dataset_path: "training/master_train.csv"
+  dataset_path: "training/master_train_clean.csv"
   augmented_path: "training/master_train_augmented.csv"
   test_size: 0.20
   random_state: 42
