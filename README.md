@@ -83,7 +83,7 @@ BLOCK / ALLOW (with reason)
 ```
 
 The key innovation is **Layer 3 (Contextual Guard)**. When the ML classifier says safe, the contextual guard checks for dangerous topic combinations regardless of surface framing. This layered design is what makes the system effective against real-world stealth attacks.
-```
+
 
 
 ---
