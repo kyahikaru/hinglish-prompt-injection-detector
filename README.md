@@ -76,6 +76,7 @@ Five sequential detection layers:
         │
         ▼
     BLOCK / ALLOW (with reason)
+
     
 The key innovation is **Layer 3 (Contextual Guard)**. When the ML classifier
 says safe, the contextual guard checks for dangerous topic combinations
