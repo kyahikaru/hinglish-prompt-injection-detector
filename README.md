@@ -83,6 +83,8 @@ says safe, the contextual guard checks for dangerous topic combinations
 regardless of surface framing. This layered design is what makes the system
 effective against real-world stealth attacks.
 
+---
+
 ## Contextual Guard Rules
 The contextual guard checks for dangerous topic combinations:
 **1. Education + Harmful Substances**
