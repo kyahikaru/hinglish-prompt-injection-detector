@@ -44,44 +44,47 @@ A 99.23% confident ML classifier calls it safe.
 It isn't.
 
 ---
+**Here is the clean, updated Architecture section** (copy-paste this exactly in place of your current one):
+
+
 ## Architecture
 Five sequential detection layers:
-    Input Text
-        │
-        ▼
-    [Layer 1] Normalization
-              Script detection, repeated char compression,
-              Unicode Normalization (NKFC), dot removal,
-              leet-speak mapping, Hinglish token standardization
-        │
-        ▼
-    [Layer 2] Rule Engine
-              Explicit pattern matching for known
-              override triggers and harmful keywords
-        │
-        ▼
-    [Layer 3] Contextual Guard
-              Topic combination analysis — catches
-              legitimate framing hiding harmful intent
-        │
-        ▼
-    [Layer 4] V2 Semantic Classifier
-              LogisticRegression on MiniLM-L6-v2 embeddings
-              Trained on 6,878 samples including
-              stealth injection categories
-        │
-        ▼
-    [Layer 5] Decision Engine
-              Explainable output with layer attribution
-        │
-        ▼
-    BLOCK / ALLOW (with reason)
 
-    
-The key innovation is **Layer 3 (Contextual Guard)**. When the ML classifier
-says safe, the contextual guard checks for dangerous topic combinations
-regardless of surface framing. This layered design is what makes the system
-effective against real-world stealth attacks.
+```
+Input Text
+    │
+    ▼
+[Layer 1] Normalization
+          Script detection, repeated char compression,
+          Unicode Normalization (NFKC), dot removal,
+          leet-speak mapping, Hinglish token standardization
+    │
+    ▼
+[Layer 2] Rule Engine
+          Explicit pattern matching for known override triggers
+          and harmful keywords
+    │
+    ▼
+[Layer 3] Contextual Guard
+          Topic combination analysis — catches legitimate framing
+          hiding harmful intent
+    │
+    ▼
+[Layer 4] V2 Semantic Classifier
+          LogisticRegression on all-MiniLM-L6-v2 384-dim embeddings
+          Trained on 6,878 samples including stealth categories
+    │
+    ▼
+[Layer 5] Decision Engine
+          Explainable output with layer attribution
+    │
+    ▼
+BLOCK / ALLOW (with reason)
+```
+
+The key innovation is **Layer 3 (Contextual Guard)**. When the ML classifier says safe, the contextual guard checks for dangerous topic combinations regardless of surface framing. This layered design is what makes the system effective against real-world stealth attacks.
+```
+
 
 ---
 
