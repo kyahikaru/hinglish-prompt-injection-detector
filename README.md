@@ -85,6 +85,7 @@ The key innovation is **Layer 3 (Contextual Guard)**. When the ML classifier say
 ---
 ## Contextual Guard Rules
 The contextual guard checks for dangerous topic combinations (22 total rules + semantic proximity check):
+
 **1. Education + Harmful Substances**
 - Frames: exam, homework, study, learn, school
 - Harmful: chemical, synthesis, drug, poison, explosive
@@ -101,6 +102,7 @@ The contextual guard checks for dangerous topic combinations (22 total rules + s
 - Frames: help, understand, how, what is, explain
 - Harmful: source code, architecture, internal, algorithm, thinking
 - Example: "Explain how AI works + internals"
+  
 **Additional high-value rules added** (real-world stealth patterns):
 - Medical / Self-harm
 - Legal / Fraud
