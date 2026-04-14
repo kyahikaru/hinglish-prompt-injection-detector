@@ -151,7 +151,21 @@ Attack categories the baseline failed on:
 |-------------------------|------------|
 | Srinivasan baseline | 80/100 |
 | V2 classifier alone | 83/100 |
-| Full pipeline | 100/100 |
+| Full pipeline | 100/100 |  
+
+### Evaluation on Srinivasan et al. (2026) Dataset
+
+We evaluated our V2 classifier alone and the complete 5-layer pipeline on the original 4000-sample Srinivasan et al. dataset using a reproducible stratified 80/20 split (`random_state=42`), yielding an 800-sample test set.
+
+**Results (injection = positive class):**
+
+| Model / Method                  | Accuracy | Precision | Recall   | F1-Score |
+|---------------------------------|----------|-----------|----------|----------|
+| Srinivasan et al. (2026)        | 99.70%   | –         | –        | –        |
+| Our V2 classifier alone         | 89.00%   | 81.97%    | **100.00%** | 90.09% |
+| Our full 5-layer pipeline       | **92.25%** | 88.24%  | 97.50%   | 92.64%   |
+
+**Transparent note:** Because Srinivasan et al. did not publish the exact train/test indices or random seed, we used a clean stratified split (`random_state=42`). Our lightweight pipeline (3.7 MB ONNX, 3× faster inference) achieves competitive performance on clean data while delivering **perfect recall** on the V2 classifier and **100% detection** on our 100-sample hard adversarial stealth set (where the Srinivasan baseline reached only 80%). This reflects the intended trade-off: robustness against semantic/code-mixed stealth attacks and production deployability over maximum accuracy on direct-injection benchmarks.
 
 ---
 
@@ -168,15 +182,17 @@ The Contextual Guard (Layer 3) is responsible for the majority of detections on 
 
 ---
 
-## Comparison with Prior Work
-| Aspect | Srinivasan et al. (2026) | This Work |
-|--------|------------------------|-----------|
-| Embedding | paraphrase-multilingual-MiniLM-L12 (110M) | all-MiniLM-L6-v2 (22M) |
-| Classifier | Transformer | LogisticRegression + StandardScaler |
-| Pipeline layers | 2 | 5 |
-| Stealth injection eval | Not evaluated | 100 prompts (100% catch) |
-| Inference speed | Slower | 3x faster per sample |
-| Model size (ONNX) | Larger | 3.7 MB |
+## Comparision with Prior Work
+
+| Aspect                  | Srinivasan et al. (2026)                  | This Work                                      |
+|-------------------------|-------------------------------------------|------------------------------------------------|
+| Embedding               | paraphrase-multilingual-MiniLM-L12 (110M) | all-MiniLM-L6-v2 (22M)                         |
+| Classifier              | Fine-tuned Transformer                    | LogisticRegression + StandardScaler            |
+| Pipeline layers         | 2                                         | 5                                              |
+| Clean test accuracy     | 99.70%                                    | **92.25%** (full pipeline)                     |
+| Stealth injection eval  | Not evaluated                             | 100-sample hard set (100% catch rate)          |
+| Inference speed         | Slower                                    | **3× faster per sample**                       |
+| Model size (ONNX)       | Larger                                    | **3.7 MB**                                     |
 
 ---
 
