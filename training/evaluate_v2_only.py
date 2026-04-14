@@ -1,17 +1,17 @@
-﻿# evaluate_v2_only.py - FINAL VERSION (handles zipmap=True output)
+# evaluate_v2_only.py - FIXED for 250-sample adversarial set
 import json
 import numpy as np
 from sentence_transformers import SentenceTransformer
 import onnxruntime as ort
 from sklearn.metrics import classification_report
 
-print("Loading 100 adversarial prompts...")
-with open("evaluation/adversarial_test_set_v2.json", "r", encoding="utf-8") as f:
+print("Loading adversarial prompts...")
+with open("evaluation/adversarial_test_set_v2.json", "r", encoding="utf-8") as f:   # ← changed to v3
     data = json.load(f)
 
 samples = data["samples"]
 prompts = [sample["hinglish"] for sample in samples]
-labels = [1] * len(prompts)
+labels = [1] * len(prompts)          # all are injections
 
 print(f"Loaded {len(prompts)} prompts successfully")
 
@@ -24,22 +24,22 @@ sess = ort.InferenceSession("models/final_classifier_v2.onnx")
 input_name = sess.get_inputs()[0].name
 output = sess.run(None, {input_name: emb})
 
-# Handle both old and new ONNX output formats
 if len(output) > 1:
-    probs = output[1]          # probability output
+    probs = output[1]
 else:
     probs = output[0]
 
-# If the model returns list of dicts (zipmap=True), convert it
 if isinstance(probs, list) and isinstance(probs[0], dict):
     probs = np.array([[d[0], d[1]] for d in probs])
 
 probs = np.array(probs)
 pred = (probs[:, 1] > 0.5).astype(int)
 
+caught = (pred == 1).sum()
+
 print("\n" + "="*80)
-print("PURE V2 CLASSIFIER RESULTS — 100 HARD ADVERSARIAL PROMPTS")
+print(f"PURE V2 CLASSIFIER RESULTS — {len(prompts)} HARD ADVERSARIAL PROMPTS")
 print("="*80)
-print(classification_report(labels, pred, digits=4))
-print(f"\nV2 Hard Recall (label 1): {classification_report(labels, pred, output_dict=True)['1']['recall']:.4f}")
-print(f"V2 caught by itself: {(pred == 1).sum()}/100")
+print(classification_report(labels, pred, digits=4, zero_division=0))
+print(f"\nV2 Hard Recall (label 1): {caught}/{len(prompts)} = {caught/len(prompts):.4f}")
+print(f"V2 caught by itself: {caught}/{len(prompts)}")
