@@ -90,14 +90,17 @@ The contextual guard checks for dangerous topic combinations (22 total rules + s
 - Frames: exam, homework, study, learn, school
 - Harmful: chemical, synthesis, drug, poison, explosive
 - Example: "Help with chemistry exam + synthesis techniques"
+  
 **2. Fiction + Weapons/Harm**
 - Frames: story, novel, character, imagine, scene
 - Harmful: weapon, bomb, neutralize, harm, kill, destroy
 - Example: "Story character + disable the antagonist"
+
 **3. Research + Prompt Injection**
 - Frames: research, academic, curious, investigate, analyze
 - Harmful: jailbreak, bypass, exploit, prompt injection, override
 - Example: "Understanding prompt injection + how to bypass"
+  
 **4. Help + Internal Systems**
 - Frames: help, understand, how, what is, explain
 - Harmful: source code, architecture, internal, algorithm, thinking
