@@ -170,6 +170,7 @@ Performance on the 250-sample adversarial stealth test set when removing each la
 | Without Layer 2 (Rules) | 248/250 (99.2%) | Guard + V2 dominant |
 | Without Layer 4 (V2 Classifier) | 247/250 (98.8%) | Guard carries almost all |
 | Rules only (Layer 2) | 2/250 (0.8%) | Extremely weak alone |
+
 The Contextual Guard (Layer 3) is responsible for the majority of detections on stealth prompts, proving its critical role in the architecture.
 
 ---
