@@ -9,8 +9,8 @@ import json
 from app.pipeline import DetectionPipeline
 from app.decision import make_decision
 
-TEST_SET_PATH = Path("evaluation/adversarial_test_set_v2.json")
-RESULTS_PATH = Path("evaluation/adversarial_results_full_pipeline.json")
+TEST_SET_PATH = Path("evaluation/adversarial_test_setv3.json")
+RESULTS_PATH = Path("evaluation/adversarial_results_v3_pipeline.json")
 
 def run_full_pipeline_eval():
     print("=" * 80)
