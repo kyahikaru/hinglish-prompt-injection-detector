@@ -6,7 +6,7 @@ import onnxruntime as ort
 from sklearn.metrics import classification_report
 
 print("Loading adversarial prompts...")
-with open("evaluation/adversarial_test_setv3.json", "r", encoding="utf-8") as f:   # ← changed to v3
+with open("benchmarks/hinglish-stealth-110-heldout.json", "r", encoding="utf-8") as f:   # ← changed to v3
     data = json.load(f)
 
 samples = data["samples"]

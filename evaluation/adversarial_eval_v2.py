@@ -9,7 +9,7 @@ import json
 from app.pipeline import DetectionPipeline
 from app.decision import make_decision
 
-TEST_SET_PATH = Path("evaluation/adversarial_test_setv3.json")
+TEST_SET_PATH = Path("benchmarks/hinglish-stealth-110-heldout.json")
 RESULTS_PATH = Path("evaluation/adversarial_results_v3_pipeline.json")
 
 def run_full_pipeline_eval():
