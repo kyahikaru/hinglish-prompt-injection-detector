@@ -483,5 +483,5 @@ Srinivasan J., Regi S.A., Anbarasan A.K. et al.
 Detection and analysis of prompt injection in Indian multilingual large language models.  
 *Scientific Reports* (2026).  
 [https://doi.org/10.1038/s41598-026-43883-0](https://doi.org/10.1038/s41598-026-43883-0)
-```
+
 
