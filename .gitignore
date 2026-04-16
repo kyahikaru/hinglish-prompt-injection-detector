@@ -212,4 +212,4 @@ __marimo__/
 # Python junk
 __pycache__/
 *.pyc
-models/classifier.onnx
+models/classifier.onnxmodels/final_embedder/

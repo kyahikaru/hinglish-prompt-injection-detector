@@ -11,7 +11,7 @@ from typing import Dict
 LEETSPEAK_MAP = {
     # Core leets
     '0': 'o', '1': 'i', '3': 'e', '4': 'a', '5': 's', '7': 't', '@': 'a',
-    'h0w': 'how', 'h\.0w': 'how', 'h0w': 'how',
+    'h0w': 'how', 'h\\.0w': 'how', 'h0w': 'how',
     'm4k3': 'make', 'cr34t3': 'create', 'b0mb': 'bomb', 'b0mb': 'bomb',
     'st3p': 'step', 'by': 'by', 'st3p by st3p': 'step by step',
     'synth3s1z3': 'synthesize', 'p01s0n': 'poison', '3xpl0s1v3': 'explosive',
