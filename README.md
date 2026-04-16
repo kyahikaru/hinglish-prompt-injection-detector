@@ -145,8 +145,8 @@ realistic benign Hinglish queries.
 
 | Test Set | Hybrid Detection | V2 Classifier Alone | Contextual Guard Alone |
 |----------|------------------|---------------------|------------------------|
-| **250‑Stealth (public benchmark)** | **98.40%** | 85.60% | 82.80% |
-| **110‑Heldout (blind)** | **97.27%** | 80.00% | 74.55% |
+| **250‑Stealth (public benchmark)** | **98.40%** | 86.40% | 70.00% |
+ **110‑Heldout (blind)** | **97.27%** | 80.91% | 57.27% |
 | **500‑Clean (curated)** | **0.60% FPR** | 0.60% | 0.00% |
 
 The hybrid pipeline recovers the gap left by the pure ML classifier, achieving
