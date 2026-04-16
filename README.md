@@ -161,7 +161,23 @@ rate on benign Hinglish chat.
 | **Full 5‑layer pipeline** | **98.4%** |
 
 The ~13 percentage point recovery demonstrates the effectiveness of the
-Contextual Guard against semantically camouflaged attacks.
+Contextual Guard against semantically camouflaged attacks. 
+
+### Ablation Study
+
+Performance on the 110‑sample truly held‑out adversarial set when removing
+each layer:
+
+| Configuration                        | Adversarial Catch Rate | Notes                        |
+|--------------------------------------|------------------------|------------------------------|
+| Full pipeline (All 5 layers)         | 97.27%                 | V2 + Guard + Rules           |
+| Without Layer 3 (Contextual Guard)   | 80.00%                 | V2 classifier only           |
+| Without Layer 2 (Rules)              | ~97%                   | Guard + V2 dominant          |
+| Without Layer 4 (V2 Classifier)      | ~57%                   | Guard carries most detections|
+
+The Contextual Guard (Layer 3) is responsible for catching many of the stealth
+cases missed by the V2 classifier alone, recovering the gap to achieve 97.27%
+hybrid detection.
 
 ---
 
