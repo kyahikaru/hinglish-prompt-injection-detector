@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this detector in your research, please cite it as below."
+authors:
+  - family-names: "Upadhayay"
+    given-names: "Abhishek"
+title: "Hinglish Prompt Injection Detector: A Hybrid Rules‑and‑ML Approach for Code‑Mixed Security"
+version: 2.0.0
+date-released: 2026-04-17
+url: "https://github.com/kyahikaru/hinglish-prompt-injection-detector"
+repository-code: "https://github.com/kyahikaru/hinglish-prompt-injection-detector"
+abstract: "A V2+ hybrid detection pipeline for Hindi‑English code‑mixed prompt injection attacks, combining explicit rule matching, contextual red‑flag analysis, and an SVM classifier over multilingual sentence embeddings."
+keywords:
+  - "prompt injection"
+  - "Hinglish"
+  - "NLP security"
+  - "code‑mixing"
+  - "ONNX"
+  - "LLM safety"
+license: MIT
+type: software

@@ -11,14 +11,14 @@ def _load_probability_threshold(path: str = "config.yaml") -> float:
 def make_decision(pipeline_output: Dict, probability_threshold: float | None = None) -> Dict:
     """
     Make a final decision based on V2+ layered detection.
-    
+
     Pipeline layers (in order):
     1. Normalization (text cleaning)
     2. Rule Engine (explicit patterns)
     3. Contextual Guard (semantic red-flags)
     4. V2 Classifier (SVM + embeddings)
     5. Final Decision (explainable)
-    
+
     Returns an explainable decision object with layer information.
     """
 

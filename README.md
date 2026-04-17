@@ -146,7 +146,7 @@ realistic benign Hinglish queries.
 | Test Set | Hybrid Detection | V2 Classifier Alone | Contextual Guard Alone |
 |----------|------------------|---------------------|------------------------|
 | **250‑Stealth (public benchmark)** | **98.40%** | 86.40% | 70.00% |
- **110‑Heldout (blind)** | **97.27%** | 80.91% | 57.27% |
+| **110‑Heldout (blind)** | **97.27%** | 80.91% | 57.27% |
 | **500‑Clean (curated)** | **0.60% FPR** | 0.60% | 0.00% |
 
 The hybrid pipeline recovers the gap left by the pure ML classifier, achieving
@@ -211,6 +211,14 @@ python -m app.main
 Enter any prompt. The system runs all five layers and returns a decision with
 full layer attribution.
 
+To verify reproducibility, run:
+
+```bash
+python reproduce.py
+```
+
+This installs dependencies and runs the full test suite.
+
 ---
 
 ## Reproduce Results
@@ -259,13 +267,18 @@ print(result["decision"]["reason"])          # why
 ```
 hinglish-prompt-injection-detector/
 ├── app/                          # Production pipeline
+│   ├── __init__.py
 │   ├── main.py
 │   ├── pipeline.py               # All 5 layers
 │   ├── decision.py
+├── preprocessing/                # Text normalization
 │   └── normalization.py
+├── rules/                        # Rule engine patterns
+│   └── instruction_rules.py
+├── tests/                        # Regression tests
+│   └── test_pipeline.py
 ├── models/                       # Trained models
-│   ├── final_classifier.onnx
-│   └── final_embedder/
+│   └── final_classifier.onnx
 ├── data/                         # All datasets
 │   ├── srinivasan_dataset.xlsx
 │   ├── hinglish-stealth-250.csv
@@ -273,10 +286,11 @@ hinglish-prompt-injection-detector/
 │   └── hinglish-clean-500.csv
 ├── notebooks/                    # Colab notebook for training/evaluation
 │   └── Training_Model_Evaluation.ipynb
-├── rules/                        # Rule engine patterns
-│   └── instruction_rules.py
 ├── config.yaml
 ├── requirements.txt
+├── reproduce.py
+├── LICENSE
+├── CITATION.cff
 └── README.md
 ```
 
@@ -284,11 +298,10 @@ hinglish-prompt-injection-detector/
 
 ## Dataset
 
-- **Training**: 4,000 samples from Srinivasan et al. (2026) – clean Hinglish prompts only.
-- **Evaluation**:
-  - `hinglish-stealth-250.csv` – public stealth benchmark
-  - `hinglish-stealth-110-heldout.csv` – blind held‑out stealth set
-  - `hinglish-clean-500.csv` – curated clean Hinglish prompts
+- **`srinivasan_dataset.xlsx`**: Re‑implementation of the benchmark prompts described in Srinivasan et al. (2026), used for comparative evaluation.
+- **`hinglish-clean-500.csv`**: 500 benign Hinglish prompts curated from web sources and natural WhatsApp conversations.
+- **`hinglish-stealth-250.csv`**: 250 stealth injection prompts designed to evade rule‑based detectors.
+- **`hinglish-stealth-110-heldout.csv`**: Held‑out test set of 110 stealth prompts.
 
 All datasets are included in the `data/` directory.
 
@@ -379,9 +392,35 @@ system outputs*. Complete safety requires both.
 
 ---
 
+## Citation
+
+If you use this detector in your research, please cite it as follows (or use the
+"CITE THIS REPOSITORY" button on GitHub):
+
+```bibtex
+@software{upadhayay2026hinglish,
+  author       = {Abhishek Upadhayay},
+  title        = {Layered Defense Against Stealth Prompt Injection in Hinglish},
+  year         = 2026,
+  version      = {2.0.0},
+  url          = {https://github.com/kyahikaru/hinglish-prompt-injection-detector}
+}
+```
+
+---
+
+## License
+
+This project is licensed under the MIT License – see the [LICENSE](LICENSE) file
+for details.
+
+---
+
 ## Reference
 
 Srinivasan J., Regi S.A., Anbarasan A.K. et al.  
 Detection and analysis of prompt injection in Indian multilingual large language models.  
 *Scientific Reports* (2026).  
 [https://doi.org/10.1038/s41598-026-43883-0](https://doi.org/10.1038/s41598-026-43883-0)
+
+
